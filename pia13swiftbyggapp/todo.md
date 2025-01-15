@@ -26,9 +26,10 @@
 
 
 ### Funktion
+* Språkstöd
 * Lägga till bild till sak att köpa
 * Karta
-
+* iPad
 
 
 
