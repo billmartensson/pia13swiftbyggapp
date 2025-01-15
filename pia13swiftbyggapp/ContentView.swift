@@ -10,11 +10,13 @@ import SwiftData
 
 struct ContentView: View {
 
+    @State var shopmodel = ShoppingModel()
+    
     @State var showList = true
     @State var showFav = false
     @State var showShopdetail = false
 
-    @State var showShopSelect = false
+    @State var showShopSelect = true
     
     var body: some View {
         VStack {
@@ -50,7 +52,7 @@ struct ContentView: View {
                 
                 VStack {
                     if showList {
-                        ShopListView()
+                        ShopListView(shopmodel: shopmodel)
                     } else {
                         ShopMapView()
                     }
@@ -59,6 +61,15 @@ struct ContentView: View {
                 
                 if showShopSelect {
                     VStack {
+                        
+                        HStack {
+                            Spacer()
+                            Button("+") {
+                                showShopdetail.toggle()
+                            }
+                        }
+                        .padding(.trailing)
+                        
                         Button("Affär A") {
                             showShopdetail.toggle()
                         }
@@ -68,7 +79,7 @@ struct ContentView: View {
                     }
                     .frame(height: 100)
                     .frame(maxWidth: .infinity)
-                    .background(Color.gray)
+                    .background(Color.black)
                 }
             } // zstack
             
@@ -87,7 +98,7 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+        .modelContainer(for: ShopItem.self, inMemory: true)
 }
 
 
