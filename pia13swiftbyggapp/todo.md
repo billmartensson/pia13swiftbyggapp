@@ -33,3 +33,14 @@
 
 
 
+
+
+
+### TODO
+* Select store inte i mitten av skärm
+* Stäng store detail vid spara
+* Listvy visa baserat på current store
+* Skapa ny store välj gör den aktiv
+
+
+

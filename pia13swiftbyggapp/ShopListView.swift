@@ -11,7 +11,12 @@ import SwiftData
 struct ShopListView: View {
     
     @Environment(\.modelContext) private var modelContext
-    @Query private var shopitems: [ShopItem]
+    //@Query private var shopitems: [ShopItem]
+    @Query(filter: #Predicate<ShopItem> { shopitem in
+        shopitem.store!.name == "IKEA"
+    }) var shopitems: [ShopItem]
+    
+    @Binding var currentstore : StoreItem?
     
     var shopmodel : ShoppingModel
     
@@ -54,6 +59,9 @@ struct ShopListView: View {
         }
         
         let newItem = ShopItem(name: addshopName, amount: addAmountNumber!)
+        
+        newItem.store = currentstore
+        
         modelContext.insert(newItem)
         
         addshopName = ""
@@ -63,6 +71,6 @@ struct ShopListView: View {
 }
 
 #Preview {
-    ShopListView(shopmodel: ShoppingModel())
-        .modelContainer(for: ShopItem.self, inMemory: true)
+    ShopListView(currentstore: .constant(StoreItem(name: "TESTSTORE")), shopmodel: ShoppingModel())
+        .modelContainer(for: [ShopItem.self, StoreItem.self], inMemory: true)
 }

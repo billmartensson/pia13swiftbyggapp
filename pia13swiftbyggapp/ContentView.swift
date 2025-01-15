@@ -10,13 +10,18 @@ import SwiftData
 
 struct ContentView: View {
 
+    @Environment(\.modelContext) private var modelContext
+    @Query private var storeitems: [StoreItem]
+    
+    @State var currentStore : StoreItem?
+    
     @State var shopmodel = ShoppingModel()
     
     @State var showList = true
     @State var showFav = false
     @State var showShopdetail = false
 
-    @State var showShopSelect = true
+    @State var showShopSelect = false
     
     var body: some View {
         VStack {
@@ -29,7 +34,10 @@ struct ContentView: View {
                 
                 Spacer()
                 
-                Text("AFFÄR X")
+                if currentStore != nil {
+                    Text(currentStore!.name)
+                }
+                
                 Button("O") {
                     showShopSelect.toggle()
                 }
@@ -48,11 +56,10 @@ struct ContentView: View {
             .background(Color.yellow)
             
             ZStack {
-                
-                
                 VStack {
                     if showList {
-                        ShopListView(shopmodel: shopmodel)
+                        ShopListView(currentstore: $currentStore, shopmodel: shopmodel)
+                        
                     } else {
                         ShopMapView()
                     }
@@ -70,20 +77,30 @@ struct ContentView: View {
                         }
                         .padding(.trailing)
                         
-                        Button("Affär A") {
-                            showShopdetail.toggle()
+                        List {
+                            ForEach(storeitems) { storeitem in
+                                Text(storeitem.name)
+                                    .onTapGesture {
+                                        currentStore = storeitem
+                                    }
+                            }
                         }
-                        Button("Affär B") {
-                            showShopdetail.toggle()
-                        }
+                        .listStyle(.plain)
                     }
-                    .frame(height: 100)
+                    .frame(height: 200)
                     .frame(maxWidth: .infinity)
-                    .background(Color.black)
+                    .background(Color.cyan)
                 }
             } // zstack
             
         } // vstack
+        .onAppear() {
+            if storeitems.count == 0 {
+                var newStore = StoreItem(name: "Standard store")
+                modelContext.insert(newStore)
+                currentStore = newStore
+            }
+        }
         .fullScreenCover(isPresented: $showFav) {
             FavoriteView()
         }
@@ -98,7 +115,7 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: ShopItem.self, inMemory: true)
+        .modelContainer(for: [ShopItem.self, StoreItem.self], inMemory: true)
 }
 
 

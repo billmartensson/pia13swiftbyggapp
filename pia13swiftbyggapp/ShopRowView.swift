@@ -14,6 +14,13 @@ struct ShopRowView: View {
     var body: some View {
         HStack {
             Text(shopitem.name)
+            
+            if shopitem.store == nil {
+                Text("NO STORE")
+            } else {
+                Text(shopitem.store!.name)
+            }
+            
             Spacer()
             Text("\(shopitem.amount)")
         }
