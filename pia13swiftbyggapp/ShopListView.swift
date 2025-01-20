@@ -6,21 +6,15 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct ShopListView: View {
-    
-    @Environment(\.modelContext) private var modelContext
-    @Query private var shopitems: [ShopItem]
     
     /*
     @Query(filter: #Predicate<ShopItem> { shopitem in
         shopitem.store!.name == "IKEA"
     }) var shopitems: [ShopItem]
     */
-    
-    @Binding var currentstore : StoreItem?
-    
+        
     var shopmodel : ShoppingModel
     
     @State var addshopName = ""
@@ -42,7 +36,7 @@ struct ShopListView: View {
             .padding(.horizontal)
             
             List {
-                ForEach(shopitems) { shopitem in
+                ForEach(shopmodel.shopitems) { shopitem in
                     ShopRowView(shopitem: shopitem)
                 }
             }
@@ -61,11 +55,7 @@ struct ShopListView: View {
             return
         }
         
-        let newItem = ShopItem(name: addshopName, amount: addAmountNumber!)
-        
-        newItem.store = currentstore
-        
-        modelContext.insert(newItem)
+        shopmodel.addShop(shopname: addshopName, amount: addAmountNumber!)
         
         addshopName = ""
         addshopAmount = ""
@@ -74,6 +64,5 @@ struct ShopListView: View {
 }
 
 #Preview {
-    ShopListView(currentstore: .constant(StoreItem(name: "TESTSTORE")), shopmodel: ShoppingModel())
-        .modelContainer(for: [ShopItem.self, StoreItem.self], inMemory: true)
+    ShopListView(shopmodel: ShoppingModel())
 }

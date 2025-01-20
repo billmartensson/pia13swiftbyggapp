@@ -11,10 +11,7 @@ import SwiftData
 struct ContentView: View {
 
     @Environment(\.modelContext) private var modelContext
-    @Query private var storeitems: [StoreItem]
-    
-    @State var currentStore : StoreItem?
-    
+        
     @State var shopmodel = ShoppingModel()
     
     @State var showList = true
@@ -34,8 +31,8 @@ struct ContentView: View {
                 
                 Spacer()
                 
-                if currentStore != nil {
-                    Text(currentStore!.name)
+                if shopmodel.currentStore != nil {
+                    Text(shopmodel.currentStore!.name)
                 }
                 
                 Button("O") {
@@ -58,8 +55,7 @@ struct ContentView: View {
             ZStack(alignment: .top) {
                 VStack {
                     if showList {
-                        ShopListView(currentstore: $currentStore, shopmodel: shopmodel)
-                        
+                        ShopListView(shopmodel: shopmodel)
                     } else {
                         ShopMapView()
                     }
@@ -78,10 +74,10 @@ struct ContentView: View {
                         .padding(.trailing)
                         
                         List {
-                            ForEach(storeitems) { storeitem in
+                            ForEach(shopmodel.storeitems) { storeitem in
                                 Text(storeitem.name)
                                     .onTapGesture {
-                                        currentStore = storeitem
+                                        shopmodel.selectStore(store: storeitem)
                                         
                                         showShopSelect = false
                                     }
@@ -99,17 +95,15 @@ struct ContentView: View {
             
         } // vstack
         .onAppear() {
-            if storeitems.count == 0 {
-                var newStore = StoreItem(name: "Standard store")
-                modelContext.insert(newStore)
-                currentStore = newStore
-            }
+            shopmodel.modelContext = modelContext
+            shopmodel.loadStoreItems()
+            shopmodel.loadShopItems()
         }
         .fullScreenCover(isPresented: $showFav) {
             FavoriteView()
         }
         .fullScreenCover(isPresented: $showShopdetail) {
-            ShopDetailView()
+            ShopDetailView(shopmodel: shopmodel)
         }
 
         

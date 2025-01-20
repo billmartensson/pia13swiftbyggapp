@@ -11,7 +11,8 @@ import SwiftData
 struct ShopDetailView: View {
     
     @Environment(\.dismiss) var dismiss
-    @Environment(\.modelContext) private var modelContext
+    
+    var shopmodel : ShoppingModel
     
     var storeitem : StoreItem?
     
@@ -43,18 +44,12 @@ struct ShopDetailView: View {
     }
     
     func saveStore() {
-        if storeitem == nil {
-            // Ny
-            var newStore = StoreItem(name: shopname)
-            modelContext.insert(newStore)
-        } else {
-            // Edit
-            storeitem?.name = shopname
-            modelContext.insert(storeitem!)
-        }
+        
+        shopmodel.saveStore(storename: shopname, storeitem: storeitem)
+        
     }
 }
 
 #Preview {
-    ShopDetailView()
+    ShopDetailView(shopmodel: ShoppingModel())
 }
