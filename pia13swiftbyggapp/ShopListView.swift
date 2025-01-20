@@ -15,7 +15,7 @@ struct ShopListView: View {
     }) var shopitems: [ShopItem]
     */
         
-    var shopmodel : ShoppingModel
+    @Binding var shopmodel : ShoppingModel
     
     @State var addshopName = ""
     @State var addshopAmount = ""
@@ -37,7 +37,11 @@ struct ShopListView: View {
             
             List {
                 ForEach(shopmodel.shopitems) { shopitem in
-                    ShopRowView(shopitem: shopitem)
+                    ShopRowView(shopitem: shopitem, favItem: {
+                        shopmodel.favoriteItem(item: shopitem)
+                    }, delItem: {
+                        shopmodel.deleteItem(item: shopitem)
+                    }, addItem: {})
                 }
             }
         } // vstack
@@ -64,5 +68,5 @@ struct ShopListView: View {
 }
 
 #Preview {
-    ShopListView(shopmodel: ShoppingModel())
+    ShopListView(shopmodel: .constant(ShoppingModel()))
 }

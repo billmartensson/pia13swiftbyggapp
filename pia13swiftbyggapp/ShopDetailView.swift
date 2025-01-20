@@ -12,7 +12,7 @@ struct ShopDetailView: View {
     
     @Environment(\.dismiss) var dismiss
     
-    var shopmodel : ShoppingModel
+    @Binding var shopmodel : ShoppingModel
     
     var storeitem : StoreItem?
     
@@ -51,5 +51,5 @@ struct ShopDetailView: View {
 }
 
 #Preview {
-    ShopDetailView(shopmodel: ShoppingModel())
+    ShopDetailView(shopmodel: .constant(ShoppingModel()))
 }

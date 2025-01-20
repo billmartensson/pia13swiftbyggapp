@@ -14,7 +14,8 @@ import SwiftData
     
     var storeitems : [StoreItem] = []
     var shopitems : [ShopItem] = []
-    
+    var favitems : [ShopItem] = []
+
     var currentStore : StoreItem?
     
     /*
@@ -24,9 +25,11 @@ import SwiftData
     */
     
     func loadShopItems() {
+        let currshopid = currentStore!.id
         do {
             let fetchDescriptor = FetchDescriptor<ShopItem>(predicate: #Predicate { sitem in
-                sitem.store!.id == currentStore!.id
+                //sitem.store!.id == currshopid
+                sitem.favorite == false
             })
             
             shopitems = try modelContext!.fetch(fetchDescriptor)
@@ -35,9 +38,21 @@ import SwiftData
         }
     }
     
+    func loadFavorites() {
+        do {
+            let fetchDescriptor = FetchDescriptor<ShopItem>(predicate: #Predicate { sitem in
+                sitem.favorite == true
+            })
+            
+            favitems = try modelContext!.fetch(fetchDescriptor)
+        } catch {
+            
+        }
+    }
+    
     func loadStoreItems() {
         do {
-            let fetchDescriptor = FetchDescriptor<StoreItem>()
+            let fetchDescriptor = FetchDescriptor<StoreItem>(sortBy: [SortDescriptor(\.name)])
             var savedstores = try modelContext!.fetch(fetchDescriptor)
             
             if savedstores.count == 0 {
@@ -59,7 +74,7 @@ import SwiftData
     
     func selectStore(store : StoreItem) {
         currentStore = store
-        loadStoreItems()
+        loadShopItems()
     }
     
     func saveStore(storename : String, storeitem : StoreItem?) {
@@ -76,19 +91,30 @@ import SwiftData
 
     }
 
+    func addShop(favitem : ShopItem) {
+        let newShopitem = ShopItem(name: favitem.name, amount: favitem.amount)
+        newShopitem.store = currentStore
+        modelContext!.insert(newShopitem)
+        loadShopItems()
+    }
+    
     func addShop(shopname : String, amount: Int) {
         let newShopitem = ShopItem(name: shopname, amount: amount)
         newShopitem.store = currentStore
         modelContext!.insert(newShopitem)
         loadShopItems()
     }
-    
-    func favoriteItem(item : StoreItem) {
-        
+
+    func favoriteItem(item : ShopItem) {
+        let newShopitem = ShopItem(name: item.name, amount: item.amount)
+        newShopitem.favorite = true
+        modelContext!.insert(newShopitem)
+        loadShopItems()
     }
     
-    func deleteItem(item : StoreItem) {
-        
+    func deleteItem(item : ShopItem) {
+        modelContext!.delete(item)
+        loadShopItems()
     }
     
     

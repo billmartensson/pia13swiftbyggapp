@@ -11,23 +11,36 @@ struct ShopRowView: View {
     
     var shopitem : ShopItem
     
+    var favItem : () -> Void
+    var delItem : () -> Void
+    var addItem : () -> Void
+    
     var body: some View {
         VStack {
             HStack {
                 Spacer()
-                Button("F") {
-                    var newShopItem = ShopItem(name: shopitem.name, amount: shopitem.amount)
-                    newShopItem.favorite = true
-                    shopitem.modelContext?.insert(newShopItem)
-                    
+                
+                if shopitem.favorite == false {
+                    Text("F")
+                        .onTapGesture {
+                            favItem()
+                        }
                 }
-                Button("E") {
-                    
-                }
-                Button("D") {
-                    
+                
+                Text("D")
+                .onTapGesture {
+                    delItem()
                 }
                 .padding(.trailing)
+                
+                if shopitem.favorite == true {
+                    Text("ADD")
+                        .onTapGesture {
+                            addItem()
+                        }
+                        .padding(.trailing)
+                }
+                
             }
             HStack {
                 Text(shopitem.name)
@@ -40,16 +53,19 @@ struct ShopRowView: View {
                 
                 Spacer()
                 
-                VStack {
-                    if shopitem.done {
-                        Text("[X]")
-                    } else {
-                        Text("[ ]")
+                if shopitem.favorite == false {
+                    VStack {
+                        if shopitem.done {
+                            Text("[X]")
+                        } else {
+                            Text("[ ]")
+                        }
+                    }
+                    .onTapGesture {
+                        shopitem.done.toggle()
                     }
                 }
-                .onTapGesture {
-                    shopitem.done.toggle()
-                }
+                
                 
                 Spacer()
                 Text("\(shopitem.amount)")
@@ -61,5 +77,5 @@ struct ShopRowView: View {
 }
 
 #Preview {
-    ShopRowView(shopitem: ShopItem(name: "Test", amount: 123))
+    ShopRowView(shopitem: ShopItem(name: "Test", amount: 123), favItem: {}, delItem: {}, addItem: {})
 }

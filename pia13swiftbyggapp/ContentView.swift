@@ -55,7 +55,7 @@ struct ContentView: View {
             ZStack(alignment: .top) {
                 VStack {
                     if showList {
-                        ShopListView(shopmodel: shopmodel)
+                        ShopListView(shopmodel: $shopmodel)
                     } else {
                         ShopMapView()
                     }
@@ -100,10 +100,10 @@ struct ContentView: View {
             shopmodel.loadShopItems()
         }
         .fullScreenCover(isPresented: $showFav) {
-            FavoriteView()
+            FavoriteView(shopmodel: $shopmodel)
         }
         .fullScreenCover(isPresented: $showShopdetail) {
-            ShopDetailView(shopmodel: shopmodel)
+            ShopDetailView(shopmodel: $shopmodel)
         }
 
         
