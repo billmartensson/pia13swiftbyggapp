@@ -32,6 +32,7 @@ struct ShopDetailView: View {
             
             Button("Save") {
                 saveStore()
+                dismiss()
             }
         }
         .onAppear() {

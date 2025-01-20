@@ -11,10 +11,13 @@ import SwiftData
 struct ShopListView: View {
     
     @Environment(\.modelContext) private var modelContext
-    //@Query private var shopitems: [ShopItem]
+    @Query private var shopitems: [ShopItem]
+    
+    /*
     @Query(filter: #Predicate<ShopItem> { shopitem in
         shopitem.store!.name == "IKEA"
     }) var shopitems: [ShopItem]
+    */
     
     @Binding var currentstore : StoreItem?
     

@@ -55,7 +55,7 @@ struct ContentView: View {
             .frame(maxWidth: .infinity)
             .background(Color.yellow)
             
-            ZStack {
+            ZStack(alignment: .top) {
                 VStack {
                     if showList {
                         ShopListView(currentstore: $currentStore, shopmodel: shopmodel)
@@ -66,7 +66,7 @@ struct ContentView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
-                if showShopSelect {
+                if showShopSelect && showList {
                     VStack {
                         
                         HStack {
@@ -82,6 +82,8 @@ struct ContentView: View {
                                 Text(storeitem.name)
                                     .onTapGesture {
                                         currentStore = storeitem
+                                        
+                                        showShopSelect = false
                                     }
                             }
                         }
@@ -91,6 +93,8 @@ struct ContentView: View {
                     .frame(maxWidth: .infinity)
                     .background(Color.cyan)
                 }
+                
+                
             } // zstack
             
         } // vstack
